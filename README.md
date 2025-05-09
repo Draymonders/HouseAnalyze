@@ -13,26 +13,26 @@
 
 - 安装依赖
 
-"""
+```
 conda create -n house_analyze python=3.10
 pip install -r requirements.txt
-"""
+```
 
 - 登录 bj.lianjia.com，获取cookie字段，填入.env_template文件，执行如下命令
 
-"""
+```
 cp .env_template .env
-"""
+```
 
 - 执行城市数据抓取
 
-"""
+```
 python house_finder.py --city_name hd --area_name small --debug 1
-"""
+```
 
 相关字段介绍
 
-"""
+```
 title: 标题
 district: 区县
 community: 小区
@@ -45,7 +45,7 @@ direction: 朝向
 fitment: 装修
 level: 楼层
 build_type: 建筑类型
-"""
+```
 
 # 参考
 

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# House Finder: 抓取房源信息
+
 
 """ DESCRIPTION OF WORK"""
 __author__ = ["draymonders"]
@@ -27,10 +29,27 @@ logging.basicConfig(
 )
 log = logging.getLogger(__file__)
 
-def get_header(city_name):
+def get_header(city_name='hd', house_id=''):
+    refer = f'https://{city_name}.lianjia.com/ershoufang/'
+    if house_id:
+        refer = f'https://{city_name}.lianjia.com/ershoufang/{house_id}.html'
     return {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36',
-        'Referer': 'https://%s.lianjia.com/ershoufang/' % city_name
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+        'Accept-Language': 'zh-CN,zh;q=0.9',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+        'Pragma': 'no-cache',
+        'Referer': refer,
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'same-origin',
+        'Sec-Fetch-User': '?1',
+        'Upgrade-Insecure-Requests': '1',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+        'sec-ch-ua': '"Chromium";v="136", "Google Chrome";v="136", "Not.A/Brand";v="99"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"macOS"',
+        # 'Cookie': 'SECKEY_ABVK=ML23Mi5WJbquRsXCmMfm2vB9GK/yZZTMb1cg8gH0hR0%3D; BMAP_SECKEY=ML23Mi5WJbquRsXCmMfm2nA6moNzOwXKYkBj7UK-ot2QauKUqoVCe9VYicIFlk82Obb1E2plr1Jmwr7TpcZA616x7Hf45vvb3DRTNbotxBNpwJ4L8VxHCxQ4JOziZWdX0cAWyFOhkqjIogUM6tBHLxI1e5LKsNOMChS3qAiEW_WMmcP4qBUl5heuOg09ifqW; lianjia_uuid=f05fc479-d360-41a1-83c9-7f1823d5d4df; Hm_lvt_46bf127ac9b856df503ec2dbf942b67e=1746676661; HMACCOUNT=3BF74A5346930089; _jzqc=1; _qzjc=1; _ga=GA1.2.664893915.1746676673; _gid=GA1.2.199881847.1746676673; login_ucid=2000000175383146; lianjia_token=2.0015b66f0c72a1208a041b463de49c08cc; lianjia_token_secure=2.0015b66f0c72a1208a041b463de49c08cc; security_ticket=DzXyN2DnbxaDsLxF43odM2kR2rk7KX5cfXtghPlbUto7uH0NYZlgANZZpi92wxsiTjQFEG4njOIgZ5u1l32DoQOQCs0XOYFF+uOEJS+S3wr12v2p9Hqr0Z/3SZeWE+ueRemAzzpF0eB41xpON7yWmuuufUOR/cODv6On6IXJ8ZY=; ftkrc_=be0b6923-8589-431b-81d0-9e420c5fb08f; lfrc_=e25feeaf-4ec4-4132-957f-a79596df4c8a; Hm_lvt_efa595b768cc9dc7d7f9823368e795f1=1746676794; Hm_lpvt_efa595b768cc9dc7d7f9823368e795f1=1746676810; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%22196ae0abc80cc1-02ee390e78d0b2-1a525636-1484784-196ae0abc814133%22%2C%22%24device_id%22%3A%22196ae0abc80cc1-02ee390e78d0b2-1a525636-1484784-196ae0abc814133%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_referrer%22%3A%22%22%2C%22%24latest_referrer_host%22%3A%22%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%7D%7D; select_city=130400; _jzqckmp=1; lianjia_ssid=6d785e67-13a9-424c-b051-fa3ddec26e50; _jzqa=1.2181010913316240400.1746676661.1746801634.1746858551.9; _jzqx=1.1746676661.1746858551.3.jzqsr=google%2Ecom|jzqct=/.jzqsr=hd%2Elianjia%2Ecom|jzqct=/ershoufang/101125241667%2Ehtml; Hm_lpvt_46bf127ac9b856df503ec2dbf942b67e=1746858558; _qzja=1.1670428823.1746676661928.1746801634451.1746858550522.1746858552750.1746858558433.0.0.0.46.9; _qzjb=1.1746858550521.3.0.0.0; _qzjto=3.1.0; _jzqb=1.3.10.1746858551.1; srcid=eyJ0Ijoie1wiZGF0YVwiOlwiZDgzYzhhNTBhM2NmY2QyYjg0MGRkYzg0MTBhMjUzMjQyMWU1NDZjMzU4MWI4MjIzNWY4NGQ1YzkxNmFlMDBkNDdjNWYwMTA1NGFhNzNhMzMyN2MwMDRlYzA0MWJiZTdkYjc4NTMwZDlkZjI3MjhkMmJmMjZkOGYzNTdkZWM1OWZhODFlZmRjMTFlYzVkZTQ2Y2VlZjk4YzYzZjQ1ZWEzZDMyODEyNTg3NGVlZGFlZWUzYzcwYjMxMDczZDg3OWY3ODI3Zjc0YjkzZWE3ODRlYTY0MTcwYWE3MTdkNGZiYmU0Njc5ODc4MzRiYzI2OTk0ODEyYjZiNGMzMDg0NjkxNVwiLFwia2V5X2lkXCI6XCIxXCIsXCJzaWduXCI6XCIyNzRiMTdmOFwifSIsInIiOiJodHRwczovL2hkLmxpYW5qaWEuY29tL2Vyc2hvdWZhbmcvMTAxMTMwNDI1OTYzLmh0bWwiLCJvcyI6IndlYiIsInYiOiIwLjEifQ==',
     }
 
 def get_cookie_dict(cookies=''):

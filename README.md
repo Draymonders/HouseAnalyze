@@ -9,6 +9,18 @@
 3. 结合基础数据和相关图，以及用户需求，让AI给出满意分（0-100），并给出相关判定原因
 4. 筛选符合条件的小区及其相关户型，对应的房子
 
+文件结构
+
+```
+|-- house_finder.py: 抓取房源简要信息
+|-- house_cut.ipynb: 房源信息裁剪，包括层高、单价、总价
+|-- house_detail_crawler.py: 抓取房源详情信息（户型图、房屋图）
+|-- house_detail_merge.py: 合并房源信息
+|-- house_info.py: 房屋信息结构化处理
+|-- house_ai_page.py: 房屋AI优选网页调试
+|-- house_ai.py: 房屋AI优选 (待增加批量处理数据)
+```
+
 ## 使用方法
 
 - 安装依赖
